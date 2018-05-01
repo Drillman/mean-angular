@@ -44,11 +44,23 @@ export class RegisterComponent implements OnInit {
       return false;
     }
 
+        // Cheking if the username is already in the database
+        if(!this.validateService.validateExistingUsername(user.username)){
+          this.flashMessages.show('This username is already used', {cssClass: 'alert-danger', timeout:3000});
+          return false;
+        }
+
+    // Checking if the email is already in the database
+    if(!this.validateService.validateExistingEmail(user.email)){
+      this.flashMessages.show('This mail address is already used', {cssClass: 'alert-danger', timeout:3000});
+      return false;
+    }
+
     //Register user
     this.authService.registerUser(user).subscribe(data => {
       if(data.success){
         this.flashMessages.show('You are now resgistered and can log in', {cssClass: "alert-success", timeout:3000}); 
-        this.router.navigate(['/login']);
+        this.router.navigate(['/dashboard']);
       }
       else{
         this.flashMessages.show('Something went wrong', {cssClass: "alert-danger", timeout:3000}); 

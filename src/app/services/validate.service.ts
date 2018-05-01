@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class ValidateService {
+  res: Boolean;
 
-  constructor() { }
+  constructor(private auth:AuthService) { }
 
   validateRegister(user){
     if(user.name == undefined || user.email == undefined || user.username == undefined || user.password == undefined || user.name == "" || user.email == "" || user.username == "" || user.password == ""){
@@ -17,5 +19,17 @@ export class ValidateService {
   validateEmail(email){
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+  }
+
+  validateExistingUsername(username){
+    this.res = undefined;
+    this.auth.validateCredential('username',username).subscribe(data => this.res = !data.existing);
+    return this.res;
+  }
+
+  validateExistingEmail(email){
+    this.res = undefined;
+    this.auth.validateCredential('email',email).subscribe(data => this.res = !data.existing);
+    return this.res;
   }
 }
