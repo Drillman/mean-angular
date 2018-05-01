@@ -24,14 +24,15 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  onRegisterSubmit(){
+  async onRegisterSubmit(){
     const user = {
       name: this.name,
       username: this.username,
       email: this.email,
       password: this.password
     }
-
+    let emailValid = await this.validateService.validateExistingEmail(user.email);
+    let usernameValid = await this.validateService.validateExistingUsername(user.username);
     // Required Fields
     if(!this.validateService.validateRegister(user)){
       this.flashMessages.show('Please fill in all fields', {cssClass: 'alert-danger', timeout:3000});
@@ -44,15 +45,17 @@ export class RegisterComponent implements OnInit {
       return false;
     }
 
-        // Cheking if the username is already in the database
-        if(!this.validateService.validateExistingUsername(user.username)){
-          this.flashMessages.show('This username is already used', {cssClass: 'alert-danger', timeout:3000});
-          return false;
-        }
-
     // Checking if the email is already in the database
-    if(!this.validateService.validateExistingEmail(user.email)){
+    if(!emailValid){
+      console.log('Email already exist return false');
       this.flashMessages.show('This mail address is already used', {cssClass: 'alert-danger', timeout:3000});
+      return false;
+    }
+
+    // Cheking if the username is already in the database
+    if(!usernameValid){
+      console.log('Username already exist return false');
+      this.flashMessages.show('This username is already used', {cssClass: 'alert-danger', timeout:3000});
       return false;
     }
 

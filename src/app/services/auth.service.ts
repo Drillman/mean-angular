@@ -28,9 +28,11 @@ export class AuthService {
     const query = {type: type, value:value};
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
+    console.log('Request sent : type= '+ query.type + ' value='+query.value);
     return this.http.post('http://localhost:3000/users/validate', query, {headers:headers})
       .map(res => {return res.json()});
   }
+
   storeUserData(token, user){
     localStorage.setItem('id_token', token);
     localStorage.setItem('user', JSON.stringify(user));

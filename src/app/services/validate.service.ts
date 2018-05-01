@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class ValidateService {
   res: Boolean;
+  res2: Boolean;
 
   constructor(private auth:AuthService) { }
 
@@ -22,14 +23,29 @@ export class ValidateService {
   }
 
   validateExistingUsername(username){
-    this.res = undefined;
-    this.auth.validateCredential('username',username).subscribe(data => this.res = !data.existing);
-    return this.res;
+    this.auth.validateCredential('username',username).subscribe(
+      data => {
+        console.log('Username existing: '+data.existing);
+        this.res2 = !data.existing;
+      },
+      err => console.error(err),
+      () => {
+        console.log("res : "+this.res);
+        return this.res;
+      });
   }
 
-  validateExistingEmail(email){
-    this.res = undefined;
-    this.auth.validateCredential('email',email).subscribe(data => this.res = !data.existing);
-    return this.res;
+  validateExistingEmail(email:String){
+    this.auth.validateCredential('email',email).subscribe(
+      data => {
+        console.log('mail existing : '+data.existing);
+        this.res = !data.existing;
+    },
+    err => console.error(err),
+    () => {
+      console.log("res : "+this.res);
+      return this.res;
+    });
+    
   }
 }
