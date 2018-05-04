@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class ValidateService {
-  res: Boolean;
 
   constructor(private auth:AuthService) { }
 
@@ -21,15 +20,4 @@ export class ValidateService {
     return re.test(String(email).toLowerCase());
   }
 
-  validateExistingUsername(username){
-    this.res = undefined;
-    this.auth.validateCredential('username',username).subscribe(data => this.res = !data.existing);
-    return this.res;
-  }
-
-  validateExistingEmail(email){
-    this.res = undefined;
-    this.auth.validateCredential('email',email).subscribe(data => this.res = !data.existing);
-    return this.res;
-  }
 }
